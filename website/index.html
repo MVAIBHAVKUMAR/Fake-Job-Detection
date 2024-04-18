@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Fake Job Detector</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Body styles */
+    body {
+      font-family: sans-serif;
+      width: 100%;
+      height: 100vh;
+      background-image: url(background.jpg);
+      background-position: center;
+      background-size: cover;
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      margin: 0;
+      padding: 20px;
+
+    }
+
+    button[type="submit"] {
+      background-color: #222;
+      text-decoration: none;
+      display: inline-block;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: capitalize;
+      border: 2px solid white;
+      padding: 12px 25px;
+      transition: all .30s ease;
+      margin-left: 250px;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+
+    button[type="submit"]:hover {
+      background-color: white;
+      color: #222;
+      border: 2px solid #1b1b1b;
+    }
+
+    /* Container for the prediction result */
+    #prediction-result {
+      color: #fff;
+      font-size: 18px;
+      font-family: sans-serif;
+      margin-top: -100px;
+      font-weight: bold;
+      text-align: center;
+
+    }
+  </style>
+
+
+</head>
+
+<body>
+  <div class="fake">
+    <h1>Fake Job Detector</h1>
+  </div>
+
+  <form id="job-form">
+    <textarea name="text" id="text" cols="30" rows="10" placeholder="Enter job description"></textarea><br>
+    <button type="submit">Predict</button>
+  </form>
+
+  <div id="prediction-result"></div>
+
+  <script>
+    const form = document.getElementById('job-form');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent default form submission
+
+      const jobDescription = document.getElementById('text').value;
+      const data = { "description": jobDescription };
+      console.log(data)
+
+      fetch('http://127.0.0.1:5000/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('prediction-result').textContent = data.prediction;
+          console.log(data)
+        })
+        .catch(error => console.error('Error:', error));
+    });
+  </script>
+</body>
+
+</html>
